@@ -1,36 +1,38 @@
-require('dotenv').config();
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 module.exports = (correo_electronico, nombre_usuario, evento) => {
     const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
+        host: 'smtp.gmail.com', // <--- CAMBIAR SERVICE POR HOST
         port: 587,
         secure: false,
         auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_PASS
+            user: process.env.GMAIL_USER || 'prismclubservide@gmail.com',
+            pass: process.env.GMAIL_PASS || 'vtxs dvtd wfdb awru'
+        },
+        tls: {
+            rejectUnauthorized: false
         }
     });
 
     const mailOptions = {
-        from: '"Prism Club Tickets" <' + process.env.GMAIL_USER + '>',
+        from: '"Prism Club Tickets" <' + (process.env.GMAIL_USER || 'prismclubservide@gmail.com') + '>',
         to: correo_electronico,
-        subject: '🎉 ¡Tu entrada para ' + evento + '!',
+        subject: '🎉 ¡Gracias por tu compra en Prism Club!',
         html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">
-            <div style="background: white; padding: 30px; border-radius: 10px; border-top: 5px solid #6a0dad;">
-                <h2 style="color: #6a0dad;">¡Hola, ${nombre_usuario}!</h2>
-                <p>Tu compra para el evento <strong>${evento}</strong> ha sido confirmada.</p>
-                <p>Presenta tu DNI en la puerta para ingresar.</p>
+        <div style="font-family: Arial, Helvetica, sans-serif; padding: 20px; color: #333; background: #f8f8f8;">
+            <div style="max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px;">
+                <h2 style="text-align: center; color: #6a0dad;">✨ ¡Gracias por tu compra, ${nombre_usuario}! ✨</h2>
+                <p>Tu entrada para el evento <strong>${evento}</strong> está confirmada.</p>
                 <hr>
-                <p style="font-size: 12px; color: #666;">Prism Club - Lima, Perú</p>
+                <p style="font-size: 12px; color: #666;">Prism Club</p>
             </div>
         </div>
         `
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-        if (err) console.error('❌ Error ticket:', err);
-        else console.log('✅ Ticket enviado:', info.response);
+        if (err) console.error('❌ Error compra:', err);
+        else console.log('✅ Correo compra enviado:', info.response);
     });
 };

@@ -1,41 +1,38 @@
-require('dotenv').config();
 const nodemailer = require('nodemailer');
-
+require('dotenv').config();
 
 module.exports = (formulario) => {
- const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Mejor explícito que service: 'gmail'
-    port: 587,              // Puerto seguro SSL
-    secure: false,           // True para 465
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com', // <--- USAR HOST
+    port: 587,              // <--- PUERTO 587
+    secure: false,          // <--- FALSE
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
+      user: process.env.GMAIL_USER || 'prismclubservide@gmail.com',
+      pass: process.env.GMAIL_PASS || 'vtxs dvtd wfdb awru'
+    },
+    tls: {
+      rejectUnauthorized: false
     }
-});
+  });
 
   const mailOptions = {
-        from: '"Prism Club Contacto" <' + process.env.GMAIL_USER + '>',
-        to: formulario.correo_electronico, // Le responde al usuario
-        bcc: process.env.GMAIL_USER,       // Te envía una copia oculta a ti
-        subject: 'Hemos recibido tu mensaje - Prism Club',
-        html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-                <h2 style="color: #ff0080;">¡Hola ${formulario.nombre}!</h2>
-                <p>Gracias por contactarnos. Hemos recibido tu consulta sobre <strong>${formulario.tipo_consulta}</strong>.</p>
-                <hr>
-                <p><strong>Tu mensaje:</strong></p>
-                <p style="background: #f4f4f4; padding: 15px; border-radius: 5px;">${formulario.mensaje}</p>
-                <hr>
-                <p>Nuestro equipo te responderá a la brevedad.</p>
-            </div>
-        `
-    };
+    from: '"Prism Club Contacto" <' + (process.env.GMAIL_USER || 'prismclubservide@gmail.com') + '>',
+    to: formulario.correo_electronico,
+    subject: 'Gracias por contactarnos',
+    html: `
+        <h2>Hola ${formulario.nombre}!</h2>
+        <p>Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.</p>
+        <hr>
+        <strong>Tu mensaje:</strong> ${formulario.mensaje} <br>
+        <strong>Tipo Consulta:</strong> ${formulario.tipo_consulta}
+    `
+  };
 
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      console.error('Error al enviar el correo:', err);
+      console.error('❌ Error al enviar el correo:', err); // Este es el error que ves en consola
     } else {
-      console.log('Correo enviado:', info.response);
+      console.log('✅ Correo enviado:', info.response);
     }
   });
 };
