@@ -8,8 +8,8 @@ module.exports = (correo_destino) => {
         port: 587,
         secure: false,
         auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_PASS
+            user: process.env.GMAIL_USER || 'prismclubservide@gmail.com',
+            pass: process.env.GMAIL_PASS || 'vtxs dvtd wfdb awru'
         }
     });
 
