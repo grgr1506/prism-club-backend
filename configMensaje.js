@@ -14,16 +14,21 @@ module.exports = (formulario) => {
 });
 
   const mailOptions = {
-    from: '"Prism Club 👻" <prismclubservide@gmail.com>',
-    to: formulario.correo_electronico,
-    subject: 'Gracias por contactarnos',
-    html: `
-        <h2>Hola ${formulario.nombre}!</h2>
-        <p>Gracias por tu mensaje. Nos pondremos en contacto contigo pronto.</p>
-        <hr>
-        <strong>Tu mensaje:</strong> ${formulario.mensaje}
-        <strong>Tipo Consulta:</strong> ${formulario.tipo_consulta}
-    `
+        from: '"Prism Club Contacto" <' + process.env.GMAIL_USER + '>',
+        to: formulario.correo_electronico, // Le responde al usuario
+        bcc: process.env.GMAIL_USER,       // Te envía una copia oculta a ti
+        subject: 'Hemos recibido tu mensaje - Prism Club',
+        html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+                <h2 style="color: #ff0080;">¡Hola ${formulario.nombre}!</h2>
+                <p>Gracias por contactarnos. Hemos recibido tu consulta sobre <strong>${formulario.tipo_consulta}</strong>.</p>
+                <hr>
+                <p><strong>Tu mensaje:</strong></p>
+                <p style="background: #f4f4f4; padding: 15px; border-radius: 5px;">${formulario.mensaje}</p>
+                <hr>
+                <p>Nuestro equipo te responderá a la brevedad.</p>
+            </div>
+        `
     };
 
   transporter.sendMail(mailOptions, (err, info) => {

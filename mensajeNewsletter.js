@@ -4,60 +4,33 @@ const nodemailer = require('nodemailer');
 
 module.exports = (correo_destino) => {
     const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Mejor explícito que service: 'gmail'
-    port: 465,              // Puerto seguro SSL
-    secure: true,           // True para 465
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
-    }
-});
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS
+        }
+    });
 
     const mailOptions = {
-        from: '"Prism Club Newsletter" <prismclubservide@gmail.com>',
+        from: '"Prism Club Newsletter" <' + process.env.GMAIL_USER + '>',
         to: correo_destino,
-        subject: ' ¡Bienvenido a la comunidad PRISM CLUB!',
+        subject: '🦄 ¡Bienvenido a la comunidad PRISM CLUB!',
         html: `
-        <div style="font-family: 'Arial', sans-serif; background-color: #000; padding: 40px; color: #fff;">
-            <div style="max-width: 600px; margin: 0 auto; background: #111; border: 1px solid #ff0080; border-radius: 10px; overflow: hidden;">
-                
-                <div style="background: linear-gradient(90deg, #ff0080, #8a2be2); padding: 20px; text-align: center;">
-                    <h1 style="margin: 0; color: #fff; font-size: 24px; letter-spacing: 2px;">PRISM CLUB</h1>
-                </div>
-
-                <div style="padding: 30px; text-align: center;">
-                    <h2 style="color: #00bfff; margin-top: 0;">¡Gracias por suscribirte!</h2>
-                    
-                    <p style="font-size: 16px; color: #ddd; line-height: 1.6;">
-                        Ya eres parte de nuestra lista exclusiva. Te mantendremos informado sobre:
-                    </p>
-                    
-                    <ul style="text-align: left; display: inline-block; color: #bbb; margin: 20px 0;">
-                        <li>✨ Eventos exclusivos y preventas VIP</li>
-                        <li>🍸 Promociones en barra y reservas</li>
-                        <li>🎵 Line-up de DJs internacionales</li>
-                    </ul>
-
-                    <div style="margin-top: 30px;">
-                        <a href="http://localhost:4200" style="background-color: #ff0080; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold; display: inline-block;">
-                            Ver Próximos Eventos
-                        </a>
-                    </div>
-                </div>
-
-                <div style="background-color: #1a1a1a; padding: 15px; text-align: center; font-size: 12px; color: #666;">
-                    <p>© 2025 Prism Club. Todos los derechos reservados.</p>
-                </div>
+        <div style="font-family: 'Arial', sans-serif; background-color: #000; padding: 40px; color: #fff; text-align: center;">
+            <div style="max-width: 600px; margin: 0 auto; background: #111; border: 1px solid #ff0080; border-radius: 10px; padding: 20px;">
+                <h1 style="color: #ff0080;">PRISM CLUB</h1>
+                <h2 style="color: #00bfff;">¡Suscripción Confirmada!</h2>
+                <p style="color: #ccc; font-size: 16px;">Ya eres parte de nuestra lista exclusiva.</p>
+                <p style="color: #888;">Pronto recibirás novedades sobre eventos y accesos VIP.</p>
             </div>
         </div>
         `
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            console.error('Error al enviar newsletter:', err);
-        } else {
-            console.log('Newsletter enviado a:', correo_destino);
-        }
+        if (err) console.error('❌ Error newsletter:', err);
+        else console.log('✅ Newsletter enviado:', info.response);
     });
 };
