@@ -4,12 +4,14 @@ const nodemailer = require('nodemailer');
 
 module.exports = (correo_destino) => {
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-         auth: {
-            user: process.env.GMAIL_USER, // Usa la variable
-            pass: process.env.GMAIL_PASS  // Usa la variable
-             }
-    });
+    host: 'smtp.gmail.com', // Mejor explícito que service: 'gmail'
+    port: 465,              // Puerto seguro SSL
+    secure: true,           // True para 465
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
+    }
+});
 
     const mailOptions = {
         from: '"Prism Club Newsletter" <prismclubservide@gmail.com>',
