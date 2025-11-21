@@ -8,7 +8,7 @@ module.exports = (correo_destino) => {
     port: 465,
     secure: true, // true para puerto 465
     auth: {
-        user: process.env.GMAIL_USER || 'prismclubservide@gmail.com',
+        user: process.env.GMAIL_USER || 'prismclubmessage@gmail.com',
         pass: process.env.GMAIL_PASS // Recuerda usar tu Contraseña de Aplicación, no la normal
     },
     tls: {
