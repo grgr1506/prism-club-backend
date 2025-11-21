@@ -2,15 +2,17 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.googlemail.com', // <--- Alias
-    port: 587,
-    secure: false,
+    host: 'smtp.gmail.com',  // Volvemos al host oficial
+    port: 465,               // Puerto SSL directo (más rápido para evitar timeouts)
+    secure: true,            // true para 465
     auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS
     },
-    tls: { rejectUnauthorized: false },
-    family: 4 // <--- IPv4
+    tls: {
+        rejectUnauthorized: false // Ayuda si Render tiene certificados intermedios raros
+    },
+    family: 4 // Mantenemos esto por seguridad
 });
 
 module.exports = (correo_destino) => {
