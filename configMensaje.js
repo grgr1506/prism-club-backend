@@ -3,19 +3,14 @@ require('dotenv').config();
 
 // --- CONFIGURACIÓN MANUAL "ANTIBLOQUEO" ---
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',  // Volvemos al host oficial
-    port: 465,               // Puerto SSL directo (más rápido para evitar timeouts)
-    secure: true,            // true para 465
+    host: 'smtp.resend.com',  // <--- CAMBIO: Usamos Resend en lugar de Gmail
+    port: 465,
+    secure: true,
     auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
-    },
-    tls: {
-        rejectUnauthorized: false // Ayuda si Render tiene certificados intermedios raros
-    },
-    family: 4 // Mantenemos esto por seguridad
+        user: 'resend',       // <--- Siempre es 'resend'
+        pass: process.env.GMAIL_PASS // <--- Tu API Key de Resend
+    }
 });
-
 // Verificación de conexión (para debug)
 transporter.verify((error, success) => {
     if (error) {
