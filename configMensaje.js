@@ -6,8 +6,8 @@ module.exports = (formulario) => {
   return new Promise((resolve, reject) => { // <--- Envolvemos en Promise
     const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // true para puerto 465
+    port: 587,
+    secure: false, // true para puerto 465
     auth: {
         user: process.env.GMAIL_USER || 'prismclubmessage@gmail.com',
         pass: process.env.GMAIL_PASS 
@@ -15,7 +15,9 @@ module.exports = (formulario) => {
     tls: {
         rejectUnauthorized: false
     },
-    family: 4 // Forzar IPv4 para evitar errores de red en Render
+    family: 4,
+    logger: true,          // <--- NUEVO: Nos dará más info en los logs
+      debug: true // Forzar IPv4 para evitar errores de red en Render
 });
 
     const mailOptions = {
