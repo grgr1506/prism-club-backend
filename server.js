@@ -106,7 +106,7 @@ app.get('/api/data/home', (req, res) => {
 });
 
 // POST Contacto
-app.post('/api/data/contact', (req, res) => {
+app.post('/api/data/contact', async(req, res) => {
     const { nombre, apellido, correo_electronico, numero_telefono, tipo_consulta, mensaje } = req.body;
     
     // 1. Guardar en BD

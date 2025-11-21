@@ -4,14 +4,18 @@ const nodemailer = require('nodemailer');
 
 module.exports = (correo_destino) => {
     const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-            user: process.env.GMAIL_USER || 'prismclubservide@gmail.com',
-            pass: process.env.GMAIL_PASS || 'vtxs dvtd wfdb awru'
-        }
-    });
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // true para puerto 465
+    auth: {
+        user: process.env.GMAIL_USER || 'prismclubservide@gmail.com',
+        pass: process.env.GMAIL_PASS // Recuerda usar tu Contraseña de Aplicación, no la normal
+    },
+    tls: {
+        rejectUnauthorized: false
+    },
+    family: 4 // Forzar IPv4 para evitar errores de red en Render
+});
 
     const mailOptions = {
         from: '"Prism Club Newsletter" <' + process.env.GMAIL_USER + '>',
