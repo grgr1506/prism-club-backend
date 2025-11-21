@@ -6,7 +6,7 @@ const resend = new Resend(process.env.GMAIL_PASS);
 module.exports = async (correo_electronico, nombre_usuario, evento) => {
   try {
     const data = await resend.emails.send({
-      from: 'Prism Club Tickets <onboarding@resend.dev>', // O 'tickets@tudominio.com' si verificaste dominio
+      from: 'Prism Club Tickets <tickets@prismclub.site>',
       to: [correo_electronico],
       subject: '🎉 ¡Tu acceso VIP está confirmado!',
       html: `
@@ -32,24 +32,20 @@ module.exports = async (correo_electronico, nombre_usuario, evento) => {
           <div class="header">
             <h1>Ticket Confirmado</h1>
           </div>
-          
           <div class="content">
             <p class="user-name">Hola, ${nombre_usuario} ✨</p>
             <p>Tu compra ha sido procesada exitosamente. Prepárate para una experiencia inolvidable.</p>
-            
             <div class="ticket-box">
               <p style="margin:0; font-size: 12px; color: #888; text-transform: uppercase;">Evento</p>
               <div class="event-name">${evento}</div>
               <p style="margin:0; font-size: 12px; color: #888;">Estado: <span style="color:#00ff88;">PAGADO</span></p>
             </div>
-
-            <p>Presenta el código QR adjunto (si aplica) o este correo en la entrada.</p>
+            <p>Presenta este correo en la entrada.</p>
             <br>
-            <a href="https://prism-frontend.vercel.app" class="btn">Ver Mis Tickets</a>
+            <a href="https://www.prismclub.site" class="btn">Ver Mis Tickets</a>
           </div>
-
           <div class="footer">
-            <p>¿Dudas? Contáctanos en soporte@prismclub.com</p>
+            <p>¿Dudas? Contáctanos en soporte@prismclub.site</p>
             <p>© 2025 Prism Club</p>
           </div>
         </div>

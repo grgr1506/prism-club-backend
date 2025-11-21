@@ -1,13 +1,12 @@
 require('dotenv').config();
-const { Resend } = require('resend'); // Importación correcta
+const { Resend } = require('resend');
 
-// Inicializamos Resend
 const resend = new Resend(process.env.GMAIL_PASS);
 
 module.exports = async (correo_destino) => {
   try {
     const data = await resend.emails.send({
-      from: 'Prism Club <onboarding@resend.dev>', // Si ya verificaste dominio usa: 'info@tudominio.com'
+      from: 'Prism Club <info@prismclub.site>',
       to: [correo_destino],
       subject: '🦄 ¡Bienvenido al universo PRISM CLUB!',
       html: `
@@ -32,7 +31,6 @@ module.exports = async (correo_destino) => {
           <div class="header">
             <h1>PRISM CLUB</h1>
           </div>
-          
           <div class="content">
             <p class="welcome-text">¡Ya eres parte de la comunidad!</p>
             <div class="divider"></div>
@@ -43,10 +41,8 @@ module.exports = async (correo_destino) => {
               <li>🎟️ Descuentos en entradas</li>
               <li>🍸 Noticias del club</li>
             </ul>
-            
-            <a href="https://prism-frontend.vercel.app" class="btn">Ver Próximos Eventos</a>
+            <a href="https://www.prismclub.site" class="btn">Ver Próximos Eventos</a>
           </div>
-
           <div class="footer">
             <p>© 2025 Prism Club. Todos los derechos reservados.</p>
             <p>Lima, Perú</p>
@@ -56,12 +52,9 @@ module.exports = async (correo_destino) => {
       </html>
       `
     });
-
     console.log('✅ Newsletter enviado (ID):', data.id);
     return data;
-
   } catch (error) {
     console.error('❌ Error al enviar Newsletter:', error);
-    // No lanzamos el error para no romper la app, solo lo logueamos
   }
 };

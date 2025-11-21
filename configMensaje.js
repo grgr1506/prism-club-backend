@@ -6,7 +6,7 @@ const resend = new Resend(process.env.GMAIL_PASS);
 module.exports = async (formulario) => {
   try {
     const data = await resend.emails.send({
-      from: 'Prism Club Soporte <onboarding@resend.dev>', // O 'soporte@tudominio.com'
+      from: 'Prism Club Soporte <soporte@prismclub.site>',
       to: [formulario.correo_electronico],
       subject: 'Hemos recibido tu mensaje 📩',
       html: `
@@ -28,21 +28,16 @@ module.exports = async (formulario) => {
           <div class="header">
             <h1>PRISM CLUB <span style="color:#00bfff;">SOPORTE</span></h1>
           </div>
-          
           <div class="content">
             <h2 style="color: #ffffff;">Hola ${formulario.nombre},</h2>
             <p>Gracias por contactarnos. Nuestro equipo ya está revisando tu consulta.</p>
-            
             <p>Copia de tu mensaje:</p>
             <div class="message-box">
               "${formulario.mensaje}"
             </div>
-            
             <p><strong>Tipo de consulta:</strong> <span style="color: #00bfff;">${formulario.tipo_consulta}</span></p>
-            
             <p>Te responderemos lo antes posible.</p>
           </div>
-
           <div class="footer">
             <p>Este es un mensaje automático, por favor no responder.</p>
             <p>© 2025 Prism Club</p>
@@ -56,6 +51,5 @@ module.exports = async (formulario) => {
     return data;
   } catch (error) {
     console.error('❌ Error Contacto:', error);
-    // No lanzamos throw para no bloquear el flujo del usuario
   }
 };
