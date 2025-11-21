@@ -1,26 +1,23 @@
-// mensajeNewsletter.js
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-module.exports = (correo_destino) => {
-    const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
+    pool: true,
     host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true para puerto 465
+    port: 465,
+    secure: true,
     auth: {
-        user: process.env.GMAIL_USER || 'prismclubmessage@gmail.com',
-        pass: process.env.GMAIL_PASS // Recuerda usar tu Contraseña de Aplicación, no la normal
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
     },
-    tls: {
-        rejectUnauthorized: false
-    },
+    tls: { rejectUnauthorized: false },
     family: 4,
-    logger: true,          // <--- NUEVO: Nos dará más info en los logs
-      debug: true // Forzar IPv4 para evitar errores de red en Render
+    connectionTimeout: 10000
 });
 
+module.exports = (correo_destino) => {
     const mailOptions = {
-        from: '"Prism Club Newsletter" <' + process.env.GMAIL_USER + '>',
+        from: `"Prism Club Newsletter" <${process.env.GMAIL_USER}>`,
         to: correo_destino,
         subject: '🦄 ¡Bienvenido a la comunidad PRISM CLUB!',
         html: `
@@ -29,7 +26,6 @@ module.exports = (correo_destino) => {
                 <h1 style="color: #ff0080;">PRISM CLUB</h1>
                 <h2 style="color: #00bfff;">¡Suscripción Confirmada!</h2>
                 <p style="color: #ccc; font-size: 16px;">Ya eres parte de nuestra lista exclusiva.</p>
-                <p style="color: #888;">Pronto recibirás novedades sobre eventos y accesos VIP.</p>
             </div>
         </div>
         `
