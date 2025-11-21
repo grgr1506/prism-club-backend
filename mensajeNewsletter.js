@@ -1,15 +1,7 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.resend.com',  // <--- CAMBIO: Usamos Resend en lugar de Gmail
-    port: 465,
-    secure: true,
-    auth: {
-        user: 'resend',       // <--- Siempre es 'resend'
-        pass: process.env.GMAIL_PASS // <--- Tu API Key de Resend
-    }
-});
+const resend = new Resend(process.env.GMAIL_PASS);
 
 module.exports = (correo_destino) => {
     const mailOptions = {
