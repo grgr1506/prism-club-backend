@@ -34,6 +34,7 @@ const storage = new CloudinaryStorage({
 });
 
 const upload = multer({ storage: storage });
+const mensajeRecuperacion = require('./mensajeRecuperacion');
 
 // --- Configuración Stripe ---
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -104,6 +105,28 @@ app.get('/api/data/home', (req, res) => {
                 eventos: eventosResults,
                 membresias: membresiasResults
             });
+        });
+    });
+});
+
+app.post('/api/auth/recovery', (req, res) => {
+    const { correo_electronico } = req.body;
+
+    // 1. Verificar si el usuario existe
+    db.query('SELECT * FROM usuarios WHERE correo_electronico = ?', [correo_electronico], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Error en servidor' });
+        if (results.length === 0) return res.status(404).json({ error: 'Correo no registrado' });
+
+        // 2. Generar contraseña temporal (simple)
+        const nuevaPass = Math.random().toString(36).slice(-8); 
+
+        // 3. Actualizar en BD (En producción idealmente se hashea esta pass)
+        db.query('UPDATE usuarios SET hash_contrasena = ? WHERE correo_electronico = ?', [nuevaPass, correo_electronico], (errUpdate) => {
+            if (errUpdate) return res.status(500).json({ error: 'Error actualizando contraseña' });
+
+            // 4. Enviar correo
+            mensajeRecuperacion(correo_electronico, nuevaPass);
+            res.json({ message: 'Correo enviado con nueva contraseña' });
         });
     });
 });
