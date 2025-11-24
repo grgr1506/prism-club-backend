@@ -181,6 +181,57 @@ app.get('/api/eventosLista', (req, res) => {
     });
 });
 
+app.get('/api/user/:id/entradas', (req, res) => {
+    const userId = req.params.id;
+    // Unimos tablas para traer el nombre del evento y la fecha
+    const sql = `
+        SELECT e.titulo, e.rutaImagen, t.codigo_qr, t.estado, t.precio_pagado, t.fecha_compra
+        FROM entradas t
+        JOIN eventos e ON t.id_evento = e.id_evento
+        WHERE t.id_usuario_asistente = ?
+        ORDER BY t.fecha_compra DESC
+    `;
+    
+    db.query(sql, [userId], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Error obteniendo entradas' });
+        res.json(results);
+    });
+});
+
+// 2. Actualizar Datos Personales (Nombre/Apellido)
+app.put('/api/user/:id/profile', (req, res) => {
+    const { nombre, apellido } = req.body;
+    const userId = req.params.id;
+    
+    const sql = `UPDATE usuarios SET nombre = ?, apellido = ? WHERE id_usuario = ?`;
+    
+    db.query(sql, [nombre, apellido, userId], (err, result) => {
+        if (err) return res.status(500).json({ error: 'Error actualizando perfil' });
+        res.json({ message: 'Perfil actualizado correctamente' });
+    });
+});
+
+// 3. Actualizar Contraseña
+app.put('/api/user/:id/password', (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.params.id;
+
+    // Primero verificamos que la contraseña actual sea correcta
+    db.query('SELECT hash_contrasena FROM usuarios WHERE id_usuario = ?', [userId], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Error interno' });
+        
+        if (results.length === 0 || results[0].hash_contrasena !== currentPassword) {
+            return res.status(401).json({ error: 'La contraseña actual es incorrecta' });
+        }
+
+        // Si es correcta, actualizamos
+        db.query('UPDATE usuarios SET hash_contrasena = ? WHERE id_usuario = ?', [newPassword, userId], (errUpdate) => {
+            if (errUpdate) return res.status(500).json({ error: 'Error cambiando contraseña' });
+            res.json({ message: 'Contraseña actualizada' });
+        });
+    });
+});
+
 // --- Auth ---
 app.post('/api/auth/register', (req, res) => {
     const { nombre, apellido, correo_electronico, numero_telefono, hash_contrasena } = req.body;
