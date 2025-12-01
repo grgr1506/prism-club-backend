@@ -248,7 +248,7 @@ app.post('/api/auth/register', (req, res) => {
 
 app.post('/api/auth/login', (req, res) => {
     const { correo_electronico, hash_contrasena } = req.body;
-    const sql = `SELECT id_usuario, nombre, tipo_usuario, hash_contrasena FROM usuarios WHERE correo_electronico = ?`;
+    const sql = `SELECT id_usuario, nombre, apellido, tipo_usuario, hash_contrasena FROM usuarios WHERE correo_electronico = ?`;
 
     db.query(sql, [correo_electronico], (err, results) => {
         if (err) return res.status(500).json({ error: 'Error interno' });
@@ -258,7 +258,7 @@ app.post('/api/auth/login', (req, res) => {
         const user = results[0];
         res.json({
             message: 'Login exitoso',
-            user: { id: user.id_usuario, nombre: user.nombre, rol: user.tipo_usuario }
+            user: { id: user.id_usuario, nombre: user.nombre, rol: user.tipo_usuario, apellido: user.apellido }
         });
     });
 });
